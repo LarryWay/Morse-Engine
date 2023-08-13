@@ -37,7 +37,7 @@ constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
     {' '," "},
 }};
 
-std::string translate_letter(char c){
+[[nodiscard]] std::string translate_letter(char c){
     for(const auto set : dictionary){
         if(set.first == c) return std::string{set.second};
     }
@@ -89,7 +89,10 @@ std::string translate_phrase(std::string input){
 
 const char translate_morse_letter(std::string m){
     for(const auto set : dictionary){
-        if(set.second == m) return set.first;
+        if(set.second == m){
+            std::cout << m << " -> " << set.first << std::endl;
+            return set.first;
+        } 
     }
 
     return '#'; // THROW ERROR
@@ -123,19 +126,35 @@ std::string translate_morse(std::string stream){
 */
 
 
-/*
- - rework morse translator
-    - make it not space dependent / space dependent 
- - rework phrase translator
-    - make more efficient with appending elements to string
-    - perhaps use vector?
+// Morse translator v.2
+[[nodiscard]] std::string translate_morse_v2(std::string input){
+    input += ' ';
+    std::vector<char> char_vec(input.cbegin(), input.cend());  // Vector of dit-dahs
+    std::vector<char> translated_vec;
 
-*/
+    int pivot = 0;
+
+    for(int x = 0 ; x < char_vec.size() ; x++){
+        if(char_vec.at(x) == ' '){
+            translated_vec.push_back(translate_morse_letter(std::string{char_vec.begin() + pivot, char_vec.begin() + x}));
+            if (x > char_vec.size() - 2) break;
+            if(char_vec.at(x + 1) == ' '){
+                translated_vec.push_back(' ');
+                x += 2;
+                pivot = x + 1;
+                continue;
+            }
+            pivot = x + 1;
+        }
+    }
+
+    return std::string{translated_vec.begin(), translated_vec.end()};
+    
+
+}
+
 
 
 int main(){
-    
-    std::string phrase = "hello this is larry";
-    std::cout << translate_phrase_v2(phrase) << std::endl;
 
 }
