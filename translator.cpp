@@ -3,7 +3,6 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
-#include <array>
 #include <string_view>
 #include <numeric>
 
@@ -16,7 +15,7 @@ constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
     {'P',".--."}, {'Q',"--.-"}, {'R',".-."},
     {'S',"..."}, {'T',"-"}, {'U',"..-"},
     {'V',"...-"}, {'W',".--"}, {'X',"-..-"},
-    {'Y',"-.--"}, {'Z',"--.."}, {' '," "},
+    {'Y',"-.--"}, {'Z',"--.."}, {' ',"/"},
 }};
 
 [[nodiscard]] std::string translate_letter(char c){
@@ -55,7 +54,6 @@ constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
 const char translate_morse_letter(std::string m){
     for(const auto set : dictionary){
         if(set.second == m){
-            std::cout << m << " -> " << set.first << std::endl;
             return set.first;
         } 
     }
@@ -64,7 +62,7 @@ const char translate_morse_letter(std::string m){
 }
 
 
-
+// Version 2.0
 [[nodiscard]] std::string translate_morse(std::string input){
     input += ' ';
     std::vector<char> char_vec(input.cbegin(), input.cend());  
@@ -81,6 +79,23 @@ const char translate_morse_letter(std::string m){
                 pivot = x + 1;
                 continue;
             }
+            pivot = x + 1;
+        }
+    }
+
+    return std::string{translated_vec.begin(), translated_vec.end()};
+}
+
+//Version 2.1
+[[nodiscard]] std::string translate_morse_v21(std::string input){
+    input += ' ';
+    std::vector<char> char_vec(input.cbegin(), input.cend());  
+    std::vector<char> translated_vec;
+    int pivot = 0;
+
+    for(int x = 0 ; x < char_vec.size() ; x++){
+        if(char_vec.at(x) == ' '){
+            translated_vec.push_back(translate_morse_letter(std::string{char_vec.begin() + pivot, char_vec.begin() + x}));
             pivot = x + 1;
         }
     }
