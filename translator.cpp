@@ -8,33 +8,15 @@
 #include <numeric>
 
 constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
-    {'A',".-"},
-    {'B',"-..."},
-    {'C',"-.-."},
-    {'D',"-.."},
-    {'E',"."},
-    {'F',"..-."},
-    {'G',"--."},
-    {'H',"...."},
-    {'I',".."},
-    {'J',".---"},
-    {'K',"-.-"},
-    {'L',".-.."},
-    {'M',"--"},
-    {'N',"-."},
-    {'O',"---"},
-    {'P',".--."},
-    {'Q',"--.-"},
-    {'R',".-."},
-    {'S',"..."},
-    {'T',"-"},
-    {'U',"..-"},
-    {'V',"...-"},
-    {'W',".--"},
-    {'X',"-..-"},
-    {'Y',"-.--"},
-    {'Z',"--.."},
-    {' '," "},
+    {'A',".-"}, {'B',"-..."}, {'C',"-.-."},
+    {'D',"-.."}, {'E',"."}, {'F',"..-."},
+    {'G',"--."}, {'H',"...."}, {'I',".."},
+    {'J',".---"}, {'K',"-.-"}, {'L',".-.."},
+    {'M',"--"}, {'N',"-."}, {'O',"---"},
+    {'P',".--."}, {'Q',"--.-"}, {'R',".-."},
+    {'S',"..."}, {'T',"-"}, {'U',"..-"},
+    {'V',"...-"}, {'W',".--"}, {'X',"-..-"},
+    {'Y',"-.--"}, {'Z',"--.."}, {' '," "},
 }};
 
 [[nodiscard]] std::string translate_letter(char c){
@@ -45,26 +27,9 @@ constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
     return "####";   // THROW ERROR
 }
 
-// Version 1
-std::string translate_phrase(std::string input){    
-
-    std::transform(input.begin(), input.end(), input.begin(), ::toupper);
-    std::string new_phrase;
-    //std::vector<char> new_phrase;
-
-    for(auto c_it = input.begin() ; c_it != input.end() - 1 ; c_it++){
-        new_phrase += translate_letter(*c_it) + ' ';  // Try catch?
-    }
-
-    new_phrase += translate_letter(*input.end());
-
-    return new_phrase;
-}
 
 
-
-// Version 2
-[[nodiscard]] std::string translate_phrase_v2(std::string input){
+[[nodiscard]] std::string translate_phrase(std::string input){
     std::transform(input.begin(), input.end(), input.begin(), ::toupper);
     std::vector<std::string> translation_list(input.length());
 
@@ -98,40 +63,12 @@ const char translate_morse_letter(std::string m){
     return '#'; // THROW ERROR
 }
 
-/*  Morse translator v.1
-std::string translate_morse(std::string stream){
-    std::string return_string;
-
-    std::array<char, 4> ditdah_buffer;
-    int dd_count = 0;
-
-    for(int x = 0 ; x < stream.length() ; x++){
-
-        if(stream.at(x) != ' '){
-            ditdah_buffer[dd_count] = stream.at(x);
-            dd_count++;
-        }else{
-            if (dd_count == 0) continue;
-            return_string += translate_morse_letter(std::string(ditdah_buffer.begin(), ditdah_buffer.begin() + dd_count));
-            std::fill(ditdah_buffer.begin(), ditdah_buffer.end(), NULL);
-            dd_count = 0;
-        }
-    }
-
-    return_string += translate_morse_letter(std::string(ditdah_buffer.begin(), ditdah_buffer.begin() + dd_count));
-    return return_string;
-
-}
-
-*/
 
 
-// Morse translator v.2
-[[nodiscard]] std::string translate_morse_v2(std::string input){
+[[nodiscard]] std::string translate_morse(std::string input){
     input += ' ';
-    std::vector<char> char_vec(input.cbegin(), input.cend());  // Vector of dit-dahs
+    std::vector<char> char_vec(input.cbegin(), input.cend());  
     std::vector<char> translated_vec;
-
     int pivot = 0;
 
     for(int x = 0 ; x < char_vec.size() ; x++){
@@ -149,12 +86,12 @@ std::string translate_morse(std::string stream){
     }
 
     return std::string{translated_vec.begin(), translated_vec.end()};
-    
-
 }
 
 
+/*
+TODO:
+ - add error handling support to the translate_letter function
+   and the translate_morse_letter function
 
-int main(){
-
-}
+*/
