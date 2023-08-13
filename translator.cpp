@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include <algorithm>
 #include <utility>
 #include <array>
 #include <string_view>
-
+#include <numeric>
 
 constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
     {'A',".-"},
@@ -44,17 +45,47 @@ std::string translate_letter(char c){
     return "####";   // THROW ERROR
 }
 
+// Version 1
 std::string translate_phrase(std::string input){    
 
     std::transform(input.begin(), input.end(), input.begin(), ::toupper);
     std::string new_phrase;
+    //std::vector<char> new_phrase;
 
-    for(char c : input){
-        new_phrase += translate_letter(c) + ' ';  // Try catch?
+    for(auto c_it = input.begin() ; c_it != input.end() - 1 ; c_it++){
+        new_phrase += translate_letter(*c_it) + ' ';  // Try catch?
     }
 
-    return std::string(new_phrase.begin(), new_phrase.end() - 1);
+    new_phrase += translate_letter(*input.end());
+
+    return new_phrase;
 }
+
+
+
+// Version 2
+[[nodiscard]] std::string translate_phrase_v2(std::string input){
+    std::transform(input.begin(), input.end(), input.begin(), ::toupper);
+    std::vector<std::string> translation_list(input.length());
+
+    std::transform(input.cbegin(), 
+                   input.cend(), 
+                   translation_list.begin(), 
+                   [](const char c){
+                        return translate_letter(c);
+                    });
+    
+    std::string return_string = std::accumulate(std::next(translation_list.begin()), 
+                                                translation_list.end(), 
+                                                *translation_list.begin(),
+                                                [](std::string a, std::string b){
+                                                    return std::move(a) + ' ' + b;
+                                                });
+
+    return return_string;
+}
+
+
 
 const char translate_morse_letter(std::string m){
     for(const auto set : dictionary){
@@ -105,6 +136,6 @@ std::string translate_morse(std::string stream){
 int main(){
     
     std::string phrase = "hello this is larry";
-
+    std::cout << translate_phrase_v2(phrase) << std::endl;
 
 }
