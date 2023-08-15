@@ -1,12 +1,15 @@
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
-#include <utility>
 #include <string_view>
+
+#include <vector>
+#include <array>
+
+#include <utility>
 #include <numeric>
 
-constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
+
+constexpr const std::array<std::pair<char, std::string_view>, 37> dictionary{{
     {'A',".-"}, {'B',"-..."}, {'C',"-.-."},
     {'D',"-.."}, {'E',"."}, {'F',"..-."},
     {'G',"--."}, {'H',"...."}, {'I',".."},
@@ -16,18 +19,25 @@ constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
     {'S',"..."}, {'T',"-"}, {'U',"..-"},
     {'V',"...-"}, {'W',".--"}, {'X',"-..-"},
     {'Y',"-.--"}, {'Z',"--.."}, {' ',"/"},
+    {'1',".----"}, {'2',"..---"}, {'3',"...--"},
+    {'4',"....-"}, {'5',"....."}, {'6',"-...."},
+    {'7',"--..."}, {'8',"---.."}, {'9',"----."},
+    {'0',"-----"} 
 }};
 
+
+// Version 2.0
 [[nodiscard]] std::string translate_letter(char c){
     for(const auto set : dictionary){
         if(set.first == c) return std::string{set.second};
     }
 
-    return "####";   // THROW ERROR
+    throw std::domain_error("Used a character that does not have a proper translation");
 }
 
 
 
+// Version 2.0
 [[nodiscard]] std::string translate_phrase(std::string input){
     std::transform(input.begin(), input.end(), input.begin(), ::toupper);
     std::vector<std::string> translation_list(input.length());
@@ -36,7 +46,12 @@ constexpr const std::array<std::pair<char, std::string_view>, 27> dictionary{{
                    input.cend(), 
                    translation_list.begin(), 
                    [](const char c){
-                        return translate_letter(c);
+                        try{
+                            return translate_letter(c);
+                        }catch(std::domain_error& e){
+                            std::cout << e.what() << std::endl;
+                            std::exit(EXIT_FAILURE);
+                        }
                     });
     
     std::string return_string = std::accumulate(std::next(translation_list.begin()), 
@@ -58,11 +73,12 @@ const char translate_morse_letter(std::string m){
         } 
     }
 
-    return '#'; // THROW ERROR
+    throw std::domain_error("Used a morse character that does not have a proper translation");
 }
 
 
-// Version 2.0
+
+// Version 2.1
 [[nodiscard]] std::string translate_morse(std::string input){
     input += ' ';
     std::vector<char> char_vec(input.cbegin(), input.cend());  
@@ -71,42 +87,17 @@ const char translate_morse_letter(std::string m){
 
     for(int x = 0 ; x < char_vec.size() ; x++){
         if(char_vec.at(x) == ' '){
-            translated_vec.push_back(translate_morse_letter(std::string{char_vec.begin() + pivot, char_vec.begin() + x}));
-            if (x > char_vec.size() - 2) break;
-            if(char_vec.at(x + 1) == ' '){
-                translated_vec.push_back(' ');
-                x += 2;
-                pivot = x + 1;
-                continue;
+            char translated_char;
+            try{
+                translated_char = translate_morse_letter(std::string{char_vec.begin() + pivot, char_vec.begin() + x}); 
+            }catch(std::domain_error& e){
+                std::cout << e.what() << std::endl;
+                std::exit(EXIT_FAILURE);
             }
+            translated_vec.push_back(translated_char);
             pivot = x + 1;
         }
     }
 
     return std::string{translated_vec.begin(), translated_vec.end()};
 }
-
-//Version 2.1
-[[nodiscard]] std::string translate_morse_v21(std::string input){
-    input += ' ';
-    std::vector<char> char_vec(input.cbegin(), input.cend());  
-    std::vector<char> translated_vec;
-    int pivot = 0;
-
-    for(int x = 0 ; x < char_vec.size() ; x++){
-        if(char_vec.at(x) == ' '){
-            translated_vec.push_back(translate_morse_letter(std::string{char_vec.begin() + pivot, char_vec.begin() + x}));
-            pivot = x + 1;
-        }
-    }
-
-    return std::string{translated_vec.begin(), translated_vec.end()};
-}
-
-
-/*
-TODO:
- - add error handling support to the translate_letter function
-   and the translate_morse_letter function
-
-*/
