@@ -115,7 +115,7 @@ int main(){
         std::cout << c;
     }
     */
-   uint32_t data = encode(std::string{". -. .- --"});
+   uint32_t data = encode(std::string{"..-."});
    std::cout << std::bitset<32>(data) << '\n';
 
    for(char c : decode(data)){

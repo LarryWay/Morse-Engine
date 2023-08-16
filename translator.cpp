@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -86,3 +88,5 @@ namespace mrse{
 
 
 }
+
+// TODO: Optimize functions that take a string as an arguement
