@@ -14,25 +14,22 @@ namespace mrse{
     using d_Type = uint64_t;
 
     int _required_bits_to_translate(const std::string& input){
-        
-        
         int counter = 0;
         for(const char c : input){
             switch(c){
-                case '.': counter++; break;
-                case '-': counter += 2; break;
-                case ' ': counter += 2; break;
+                case '.': counter++; break;     // counts bits required for a '.' (1)
+                case '-': counter += 2; break;  // counts bits required for a '-' (2)
+                case ' ': counter += 2; break;  // counts bits required for a ' ' (2)
             }
-            counter++;
+            counter++;  // counts bits for space between characters (1) 
         }
 
-        return counter;
-
+        return (counter - 1);  //  -1 to ignore last "space between characters", not needed
     }
 
 
 
-    int _num_of_dtypes_needed(float _required_bits){
+    int _num_of_dtypes_needed(float _required_bits){  // calculates number of d_Types needed to contain encoded message 
         float bits_per_dtype = _required_bits / (sizeof(d_Type) * 8);
         if(bits_per_dtype == floor(bits_per_dtype)){
             return bits_per_dtype;
@@ -42,14 +39,14 @@ namespace mrse{
 
 
 
-    void _encode_by_bitshift(d_Type& stream, const std::string& str){
+    void _encode_by_bitshift(d_Type& stream, const std::string& str){  // endcoding algorithm to convert dit-dahs to binary
         for(char c : str){
             if(c == '.'){
-                stream = (stream | 0b1) << 2;
+                stream = (stream | 0b1) << 2;  // marks a '.' as a "1" in binary
             }else if(c == '-'){
-                stream = ((stream << 1) | 0b11) << 2;
+                stream = ((stream << 1) | 0b11) << 2;  // marks a '-' as a "11" in binary
             }else if(c == ' '){
-                stream = stream << 2;
+                stream = stream << 2;  // marks a ' ' as a "00" in binary
             }
         }
     }
