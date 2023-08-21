@@ -21,8 +21,15 @@ namespace mrse{
         {'0',"-----"} 
     }};
 
-    constexpr const std::array<std::pair<char, int>, 3> ditdah_dictionary{{  // TODO: MAKE USE OF THIS DICTIONARY
-        {'.', 1}, {'-', 2}, {' ', 2}
+
+    struct dd_struct{
+        char symb;
+        int size;
+        int notation;
+    };
+
+    constexpr const std::array<dd_struct, 4> ditdah_dictionary{{
+        {'.', 1, 0b1}, {'-', 2, 0b11}, {' ', 1, 0b00}, {'/', 3, 0b111}
     }};
 }
 

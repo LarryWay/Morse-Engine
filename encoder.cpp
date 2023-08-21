@@ -18,11 +18,11 @@ namespace mrse{
         int counter = 0;
         for(const char c : input){
             switch(c){
-                case '.': counter++; break;      // counts bits required for a '.' (1)
-                case '-': counter += 2 ; break;  // counts bits required for a '-' (2)
-                case ' ': counter += 1 ; break;  // counts bits required for a ' ' (2)
-                case '/': counter += 3 ; break;  // counts bits required for a '/' (3)
-                default: std::cout << "ERROR" << std::endl;
+                case ditdah_dictionary[0].symb : counter += ditdah_dictionary[0].size ; break;  // counts bits required for a '.' (1)
+                case ditdah_dictionary[1].symb : counter += ditdah_dictionary[1].size ; break;  // counts bits required for a '-' (2)
+                case ditdah_dictionary[2].symb : counter += ditdah_dictionary[2].size ; break;  // counts bits required for a ' ' (2)
+                case ditdah_dictionary[3].symb : counter += ditdah_dictionary[3].size ; break;  // counts bits required for a '/' (3)
+                default: std::cout << "ERROR" << std::endl;  
             }
             counter++;  // counts bits for space between characters (1) 
         }
@@ -44,6 +44,7 @@ namespace mrse{
 
     void _encode_by_bitshift(d_Type& stream, const std::string& str){  // endcoding algorithm to convert dit-dahs to binary
         
+        /*  PREVIOUS VERSION
         for(char c : str){
             if(c == '.'){
                 stream = (stream | 0b1) << 2;           // marks a '.' as a "1" in binary
@@ -54,8 +55,18 @@ namespace mrse{
             }else if(c == '/'){                         // *** CAUTION: assumes a ' ' follows the '/' ***  SHOULD MAKE MORE RESILIANT
                 stream = ((stream << 2) | 0b111) << 2;  // marks a '/' as a "111" in binary
             }
+
+            stream = stream >> 2;
+        } 
+        */
+
+        for(const char c : str){
+            for(const auto& s : ditdah_dictionary){
+                if(c == s.symb) stream = ((stream << (s.size + 1)) | s.notation);
+            }
         }
-        stream = stream >> 2;
+
+        
     }
 
 
@@ -102,7 +113,11 @@ namespace mrse{
 }
 
 
+/*
+TO DO LIST
+ - throw and catch exceptions in helper functions
 
+*/
 
 /*
 
