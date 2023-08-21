@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <bitset>
 #include <cmath>
 #include <utility>
 
@@ -12,12 +11,10 @@
 
 namespace mrse{
 
-    using d_Type = uint64_t;
-
     int _required_bits_to_translate(const std::string& input){  
         int counter = 0;
         for(const char c : input){
-            switch(c){
+            switch(c){  // Could use a for lopp instead, however, complexity?
                 case ditdah_dictionary[0].symb : counter += ditdah_dictionary[0].size ; break;  // counts bits required for a '.' (1)
                 case ditdah_dictionary[1].symb : counter += ditdah_dictionary[1].size ; break;  // counts bits required for a '-' (2)
                 case ditdah_dictionary[2].symb : counter += ditdah_dictionary[2].size ; break;  // counts bits required for a ' ' (2)
@@ -32,7 +29,7 @@ namespace mrse{
 
 
     int _num_of_dtypes_needed(float _required_bits){  // calculates number of d_Types needed to contain encoded message 
-        float bits_per_dtype = (_required_bits / (sizeof(d_Type) * 8)) + 0.1;  // Add 0.1 to guarentee enough space for bits  (DOCUMENT)
+        float bits_per_dtype = (_required_bits / (sizeof(d_Type) * 8)) + 0.2;  // Add 0.2 to guarentee enough space for bits  (DOCUMENT)
 
         if(bits_per_dtype == floor(bits_per_dtype)){
             return bits_per_dtype;
@@ -43,30 +40,13 @@ namespace mrse{
 
 
     void _encode_by_bitshift(d_Type& stream, const std::string& str){  // endcoding algorithm to convert dit-dahs to binary
-        
-        /*  PREVIOUS VERSION
-        for(char c : str){
-            if(c == '.'){
-                stream = (stream | 0b1) << 2;           // marks a '.' as a "1" in binary
-            }else if(c == '-'){
-                stream = ((stream << 1) | 0b11) << 2;   // marks a '-' as a "11" in binary
-            }else if(c == ' '){
-                stream = stream << 2;                   // marks a ' ' as a "00" in binary
-            }else if(c == '/'){                         // *** CAUTION: assumes a ' ' follows the '/' ***  SHOULD MAKE MORE RESILIANT
-                stream = ((stream << 2) | 0b111) << 2;  // marks a '/' as a "111" in binary
-            }
-
-            stream = stream >> 2;
-        } 
-        */
-
+        stream = stream | 0b1;  // starting bit indicator
         for(const char c : str){
             for(const auto& s : ditdah_dictionary){
                 if(c == s.symb) stream = ((stream << (s.size + 1)) | s.notation);
             }
         }
 
-        
     }
 
 

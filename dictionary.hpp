@@ -5,6 +5,10 @@
 #include <string_view>
 
 namespace mrse{
+    
+    using d_Type = uint64_t;
+
+
     constexpr const std::array<std::pair<char, std::string_view>, 37> morse_dictionary{{
         {'A',".-"}, {'B',"-..."}, {'C',"-.-."},
         {'D',"-.."}, {'E',"."}, {'F',"..-."},
