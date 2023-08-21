@@ -12,7 +12,7 @@ namespace mrse{
 
     // Version 2.0
     [[nodiscard]] std::string translate_letter(char c){
-        for(const auto set : mrse::dictionary){
+        for(const auto set : mrse::morse_dictionary){
             if(set.first == c) return std::string{set.second};
         }
 
@@ -51,7 +51,7 @@ namespace mrse{
 
 
     const char translate_morse_letter(std::string m){
-        for(const auto set : mrse::dictionary){
+        for(const auto set : mrse::morse_dictionary){
             if(set.second == m){
                 return set.first;
             } 
