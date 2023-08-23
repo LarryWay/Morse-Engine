@@ -6,7 +6,8 @@
 #include <cmath>
 #include <utility>
 
-
+#include "dictionary.hpp"
+#include "mrse_utility.cpp"
 
 
 namespace mrse{
@@ -35,18 +36,17 @@ namespace mrse{
             return bits_per_dtype;
         }
         return (floor(bits_per_dtype) + 1);
-    }
+    }   
 
 
 
     void _encode_by_bitshift(d_Type& stream, const std::string& str){  // endcoding algorithm to convert dit-dahs to binary
-        stream = stream | 0b1;  // starting bit indicator
+        stream = (stream | 0b1);  // starting bit indicator
         for(const char c : str){
             for(const auto& s : ditdah_dictionary){
                 if(c == s.symb) stream = ((stream << (s.size + 1)) | s.notation);
             }
         }
-
     }
 
 
