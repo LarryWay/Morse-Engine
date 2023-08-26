@@ -16,7 +16,7 @@ namespace mrse{
             if(set.first == c) return std::string{set.second};
         }
 
-        throw std::domain_error("Used a character that does not have a proper translation");
+        throw std::domain_error("Used a character that does not have a proper translation\n\t-unknown character: " + c);
     }
 
 
@@ -56,8 +56,10 @@ namespace mrse{
                 return set.first;
             } 
         }
-
-        throw std::domain_error("Used a morse character that does not have a proper translation");
+        
+        // FIX ERROR MESSAGES
+        std::string error_message = std::string{"Used a morse character that does not have a proper translation\n\t-unkown morse: "} + std::to_string(int(m[0]));
+        throw std::domain_error(error_message);
     }
 
 

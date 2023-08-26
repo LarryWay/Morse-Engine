@@ -30,7 +30,7 @@ namespace mrse{
 
 
     int _num_of_dtypes_needed(float _required_bits){  // calculates number of d_Types needed to contain encoded message 
-        float bits_per_dtype = (_required_bits / (sizeof(d_Type) * 8)) + 0.2;  // Add 0.2 to guarentee enough space for bits  (DOCUMENT)
+        float bits_per_dtype = (_required_bits / (sizeof(d_Type) * 8)) + 2.2;  // Add 2.2 to guarentee enough space for bits  (DOCUMENT)
 
         if(bits_per_dtype == floor(bits_per_dtype)){
             return bits_per_dtype;
