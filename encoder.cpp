@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <utility>
+#include <assert.h>
 
 #include "dictionary.hpp"
 #include "mrse_utility.cpp"
@@ -12,47 +13,49 @@
 
 namespace mrse{
 
-    int _required_bits_to_translate(const std::string& input){  
-        int counter = 0;
-        for(const char c : input){
-            switch(c){  // Could use a for lopp instead, however, complexity?
-                case ditdah_dictionary[0].symb : counter += ditdah_dictionary[0].size ; break;  // counts bits required for a '.' (1)
-                case ditdah_dictionary[1].symb : counter += ditdah_dictionary[1].size ; break;  // counts bits required for a '-' (2)
-                case ditdah_dictionary[2].symb : counter += ditdah_dictionary[2].size ; break;  // counts bits required for a ' ' (2)
-                case ditdah_dictionary[3].symb : counter += ditdah_dictionary[3].size ; break;  // counts bits required for a '/' (3)
-                default: std::cout << "ERROR" << std::endl;  
+    namespace helpers{
+
+        int required_bits_to_translate(const std::string& input) noexcept{  
+            int counter = 0;
+            for(const char c : input){
+                switch(c){  
+                    case ditdah_dictionary[0].symb : counter += ditdah_dictionary[0].size ; break;  // counts bits required for a '.' (1)
+                    case ditdah_dictionary[1].symb : counter += ditdah_dictionary[1].size ; break;  // counts bits required for a '-' (2)
+                    case ditdah_dictionary[2].symb : counter += ditdah_dictionary[2].size ; break;  // counts bits required for a ' ' (2)
+                    case ditdah_dictionary[3].symb : counter += ditdah_dictionary[3].size ; break;  // counts bits required for a '/' (3)
+                    //default: std::cout << "ERROR" << std::endl;  
+                }
+                counter++;  // counts bits for space between characters (1) 
             }
-            counter++;  // counts bits for space between characters (1) 
+            return (counter - 1);  //  -1 to ignore last "space between characters", not needed
         }
-        return (counter - 1);  //  -1 to ignore last "space between characters", not needed
-    }
+
+
+        int num_of_dtypes_needed(float _required_bits) noexcept{  // calculates number of d_Types needed to contain encoded message 
+            float bits_per_dtype = (_required_bits / (sizeof(d_Type) * 8)) + 2.2;  // Add 2.2 to guarentee enough space for bits  (DOCUMENT)
+
+            if(bits_per_dtype == floor(bits_per_dtype)){
+                return bits_per_dtype;
+            }
+            return (floor(bits_per_dtype) + 1);
+        }   
 
 
 
-    int _num_of_dtypes_needed(float _required_bits){  // calculates number of d_Types needed to contain encoded message 
-        float bits_per_dtype = (_required_bits / (sizeof(d_Type) * 8)) + 2.2;  // Add 2.2 to guarentee enough space for bits  (DOCUMENT)
-
-        if(bits_per_dtype == floor(bits_per_dtype)){
-            return bits_per_dtype;
-        }
-        return (floor(bits_per_dtype) + 1);
-    }   
-
-
-
-    void _encode_by_bitshift(d_Type& stream, const std::string& str){  // endcoding algorithm to convert dit-dahs to binary
-        stream = (stream | 0b1);  // starting bit indicator
-        for(const char c : str){
-            for(const auto& s : ditdah_dictionary){
-                if(c == s.symb) stream = ((stream << (s.size + 1)) | s.notation);
+        void encode_by_bitshift(d_Type& stream, const std::string& str){  // endcoding algorithm to convert dit-dahs to binary
+            stream = (stream | 0b1);  // starting bit indicator
+            for(const char c : str){
+                for(const auto& s : ditdah_dictionary){
+                    if(c == s.symb) stream = ((stream << (s.size + 1)) | s.notation);
+                }
             }
         }
+
     }
-
-
 
     std::vector<d_Type> encode_morse(const std::string& input){
-        std::vector<d_Type> return_vec(_num_of_dtypes_needed(_required_bits_to_translate(input)));
+        
+        std::vector<d_Type> return_vec(helpers::num_of_dtypes_needed(helpers::required_bits_to_translate(input)));
         std::fill(return_vec.begin(), return_vec.end(), 0);
 
         const auto i_size = input.size();
@@ -72,17 +75,9 @@ namespace mrse{
             }
             
         }
-         
-        /*FOR DEBUGGS
-        for(auto p : split_locs){
-            std::cout << std::string{input.begin() + p.first, input.begin() + p.second} << '\t' << "(" << p.first << "," << p.second << ")" << '\n';
-        }
-        */
-        
-        
 
         for(int x = 0 ; x < rv_size ; x++){
-            _encode_by_bitshift(return_vec.at(x), {input.begin() + split_locs.at(x).first, input.begin() + split_locs.at(x).second});
+            helpers::encode_by_bitshift(return_vec.at(x), {input.begin() + split_locs.at(x).first, input.begin() + split_locs.at(x).second});
         }
 
         return return_vec;

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <numeric>
+#include <utility>
 
 #include "dictionary.hpp"
 
@@ -11,32 +12,34 @@ namespace mrse{
 
 
     // Version 2.0
-    [[nodiscard]] std::string translate_letter(char c){
+    [[nodiscard]] std::string translate_letter(char c) noexcept{
         for(const auto set : mrse::morse_dictionary){
             if(set.first == c) return std::string{set.second};
         }
+        std::exit(EXIT_FAILURE);
+    }
 
-        throw std::domain_error("Used a character that does not have a proper translation\n\t-unknown character: " + c);
+    const char translate_morse_letter(const std::string& m){
+        for(const auto set : mrse::morse_dictionary){
+            if(set.second == m){
+                return set.first;
+            } 
+        }
+        std::exit(EXIT_FAILURE);
     }
 
 
 
     // Version 2.0
-    [[nodiscard]] std::string translate_phrase(std::string input){
-        std::transform(input.begin(), input.end(), input.begin(), ::toupper);
-        std::vector<std::string> translation_list(input.length());
+    [[nodiscard]] std::string translate_phrase(const std::string& input){
+        std::string uppercase_input;
+        std::transform(input.cbegin(), input.cend(), uppercase_input.begin(), ::toupper);
+        std::vector<std::string> translation_list(uppercase_input.length());
 
-        std::transform(input.cbegin(), 
-                    input.cend(), 
+        std::transform(uppercase_input.cbegin(), 
+                    uppercase_input.cend(), 
                     translation_list.begin(), 
-                    [](const char c){
-                            try{
-                                return translate_letter(c);
-                            }catch(std::domain_error& e){
-                                std::cout << e.what() << std::endl;
-                                std::exit(EXIT_FAILURE);
-                            }
-                        });
+                    [](const char c){ return translate_letter(c);});
         
         std::string return_string = std::accumulate(std::next(translation_list.begin()), 
                                                     translation_list.end(), 
@@ -50,17 +53,7 @@ namespace mrse{
 
 
 
-    const char translate_morse_letter(std::string m){
-        for(const auto set : mrse::morse_dictionary){
-            if(set.second == m){
-                return set.first;
-            } 
-        }
-        
-        // FIX ERROR MESSAGES
-        std::string error_message = std::string{"Used a morse character that does not have a proper translation\n\t-unkown morse: "} + std::to_string(int(m[0]));
-        throw std::domain_error(error_message);
-    }
+
 
 
 
@@ -74,12 +67,7 @@ namespace mrse{
         for(int x = 0 ; x < char_vec.size() ; x++){
             if(char_vec.at(x) == ' '){
                 char translated_char;
-                try{
                     translated_char = translate_morse_letter(std::string{char_vec.begin() + pivot, char_vec.begin() + x}); 
-                }catch(std::domain_error& e){
-                    std::cout << e.what() << std::endl;
-                    std::exit(EXIT_FAILURE);
-                }
                 translated_vec.push_back(translated_char);
                 pivot = x + 1;
             }
@@ -87,6 +75,7 @@ namespace mrse{
 
         return std::string{translated_vec.begin(), translated_vec.end()};
     }
+
 
 
 }

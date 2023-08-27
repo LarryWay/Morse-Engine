@@ -54,7 +54,7 @@ namespace mrse{
 
 
 
-    std::vector<char> decode(const std::vector<mrse::d_Type>& streams){
+    std::vector<char> decode_stream(const std::vector<mrse::d_Type>& streams){
         std::vector<char> return_vec;
 
         for(const auto s : streams){
