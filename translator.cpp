@@ -16,6 +16,7 @@ namespace mrse{
         for(const auto set : mrse::morse_dictionary){
             if(set.first == c) return std::string{set.second};
         }
+        std::cerr << "Letter does not have a proper translation: '" << c << "'" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -25,22 +26,22 @@ namespace mrse{
                 return set.first;
             } 
         }
+        std::cerr << "Morse does not have a proper translation: \"" << m << "\"" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
 
 
     // Version 2.0
-    [[nodiscard]] std::string translate_phrase(const std::string& input){
-        std::string uppercase_input;
-        std::transform(input.cbegin(), input.cend(), uppercase_input.begin(), ::toupper);
-        std::vector<std::string> translation_list(uppercase_input.length());
+    [[nodiscard]] std::string translate_phrase(std::string input){
+        std::transform(input.cbegin(), input.cend(), input.begin(), ::toupper);
+        std::vector<std::string> translation_list(input.length());
 
-        std::transform(uppercase_input.cbegin(), 
-                    uppercase_input.cend(), 
+        std::transform(input.cbegin(), 
+                    input.cend(), 
                     translation_list.begin(), 
-                    [](const char c){ return translate_letter(c);});
-        
+                    [](const char c){ return translate_letter(c);});        
+
         std::string return_string = std::accumulate(std::next(translation_list.begin()), 
                                                     translation_list.end(), 
                                                     *translation_list.begin(),
