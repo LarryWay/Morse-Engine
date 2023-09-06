@@ -25,11 +25,12 @@ namespace mrse{
         {'0',"-----"} 
     }};
 
+// Should use a dictionary instead
 
     struct dd_struct{
         char symb;
         int size;
-        int notation;
+        d_Type notation;
     };
 
     constexpr const std::array<dd_struct, 4> ditdah_dictionary{{
