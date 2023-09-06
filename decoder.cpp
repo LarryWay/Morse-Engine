@@ -32,20 +32,25 @@ namespace mrse{
 
 
         template <typename T>
-        std::optional<char> decode_with_anchor(const int anchor, const int shifter, const T stream){  // assume stream is unsigned
-            T s = stream;
-            s <<= ((sizeof(T) * 8) - anchor);
-            s >>= ((sizeof(T) * 8) - (anchor - shifter + 1));
+        std::optional<char> decode_with_anchor(const int anchor, const int shifter, const T stream) noexcept{  // assume stream is unsigned
 
-            for(const auto& dd : ditdah_dictionary){
-                if(dd.notation == s){
-                    if (dd.symb == ' ' && (anchor - shifter) < dd.size){
-                        return {};               
+            // isolate desired sequence in stream from [anchor, shifter]
+            std::make_unsigned_t<T> isolated_sequence = stream;
+            isolated_sequence <<= ((sizeof(T) * 8) - anchor);
+            isolated_sequence >>= ((sizeof(T) * 8) - (anchor - shifter + 1));
+
+            for(const dd_struct& dd : ditdah_dictionary){
+                if(dd.notation == isolated_sequence){  // find notation that matches sequence (s)
+                    if ((dd.symb == ' ') && ((anchor - shifter) < dd.size)){
+                        return {};              
                     }
                     return dd.symb;
                 } 
             }
-            return {};
+            mrse::binary_print(isolated_sequence);
+            std::string iss = std::bitset<sizeof(T) * 8>(isolated_sequence).to_string();
+            std::cerr << "Unable to decode sequence: " << std::string{iss.begin() + (iss.size() - (anchor - shifter + 1)), iss.end()} << std::endl;
+            std::exit(EXIT_FAILURE);
         }
 
 

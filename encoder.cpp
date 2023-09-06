@@ -23,7 +23,9 @@ namespace mrse{
                     case ditdah_dictionary[1].symb : counter += ditdah_dictionary[1].size ; break;  // counts bits required for a '-' (2)
                     case ditdah_dictionary[2].symb : counter += ditdah_dictionary[2].size ; break;  // counts bits required for a ' ' (2)
                     case ditdah_dictionary[3].symb : counter += ditdah_dictionary[3].size ; break;  // counts bits required for a '/' (3)
-                    //default: std::cout << "ERROR" << std::endl;  
+                    default: 
+                        std::cerr << "unexpected symbol: \"" << c << "\" in \"required_bits_to_translate\" function"<< std::endl;  
+                        std::exit(EXIT_FAILURE);
                 }
                 counter++;  // counts bits for space between characters (1) 
             }
@@ -43,7 +45,7 @@ namespace mrse{
 
 
 
-        void encode_by_bitshift(d_Type& stream, const std::string& str){  // endcoding algorithm to convert dit-dahs to binary
+        void encode_by_bitshift(d_Type& stream, const std::string& str) noexcept{  // endcoding algorithm to convert dit-dahs to binary
             stream = (stream | 0b1);  // starting bit indicator
             for(const char c : str){
                 for(const auto& s : ditdah_dictionary){
