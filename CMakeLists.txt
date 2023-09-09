@@ -1,7 +1,7 @@
 
 
 set(SRC "${CMAKE_CURRENT_SOURCE_DIR}/src")
-set(INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 
 set(MRSE_SRCS
@@ -22,4 +22,4 @@ set(MRSE_INCLUDES
 
 
 add_library(MRSE-ENGINE STATIC ${MRSE_SRCS})
-target_include_directories(MRSE-ENGINE PRIVATE ${MRSE_INCLUDES})
+target_include_directories(MRSE-ENGINE PUBLIC "${INCLUDES}")
