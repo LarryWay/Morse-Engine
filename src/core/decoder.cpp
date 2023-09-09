@@ -1,3 +1,4 @@
+#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
 #pragma once
 
 #include <iostream>
