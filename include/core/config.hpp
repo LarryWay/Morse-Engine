@@ -3,12 +3,20 @@
 #include <array>
 #include <utility>
 #include <string_view>
+#include <unordered_map>
+#include <string>
 
 
 namespace mrse{
     
     using d_Type = uint64_t;
 
+    enum INPUT_FLAGS{
+
+        RAW_INPUT,
+        CAPITALIZED_INPUT
+
+    };
 
     inline static constexpr const std::array<std::pair<char, std::string_view>, 37> morse_dictionary{{
         {'A',".-"}, {'B',"-..."}, {'C',"-.-."},
@@ -26,7 +34,22 @@ namespace mrse{
         {'0',"-----"} 
     }};
 
-// Should use a dictionary instead
+    inline static const std::unordered_map<char, std::string> morse_dictionary_map = 
+    {
+        {'A',".-"}, {'B',"-..."}, {'C',"-.-."},
+        {'D',"-.."}, {'E',"."}, {'F',"..-."},
+        {'G',"--."}, {'H',"...."}, {'I',".."},
+        {'J',".---"}, {'K',"-.-"}, {'L',".-.."},
+        {'M',"--"}, {'N',"-."}, {'O',"---"},
+        {'P',".--."}, {'Q',"--.-"}, {'R',".-."},
+        {'S',"..."}, {'T',"-"}, {'U',"..-"},
+        {'V',"...-"}, {'W',".--"}, {'X',"-..-"},
+        {'Y',"-.--"}, {'Z',"--.."}, {' ',"/"},
+        {'1',".----"}, {'2',"..---"}, {'3',"...--"},
+        {'4',"....-"}, {'5',"....."}, {'6',"-...."},
+        {'7',"--..."}, {'8',"---.."}, {'9',"----."},
+        {'0',"-----"} 
+    };
 
 
 
