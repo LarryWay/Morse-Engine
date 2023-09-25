@@ -1,3 +1,4 @@
+#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
 #pragma once
 
 #include <iostream>
@@ -26,7 +27,7 @@ namespace mrse{
     // Note: Very rough version, should condense
     // Purpose: checks if phrase only consists of characters defined in dictionary
     //          Heavy check: translator will NOT throw an error if this returns true
-    bool validate_ascii_phrase(const std::string& phrase, INPUT_FLAGS flag = INPUT_FLAGS::RAW_INPUT){
+    bool validate_ascii_phrase(const std::string& phrase, INPUT_FLAGS flag){
 
         if(flag == INPUT_FLAGS::RAW_INPUT){
             std::vector<char> capital_letters(phrase.size());

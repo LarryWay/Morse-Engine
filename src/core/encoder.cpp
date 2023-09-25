@@ -66,25 +66,21 @@ namespace mrse{
             std::vector<d_Type> return_vec(helpers::num_of_dtypes_needed(helpers::required_bits_to_translate(input)));
             std::fill(return_vec.begin(), return_vec.end(), 0);
 
-            const auto i_size = input.size();
-            const auto rv_size = return_vec.size();
-            const auto block_size = floor(i_size / rv_size);
-            const auto block_remainder = i_size % rv_size;
-            auto cnt = block_remainder;
+            const int block_size = floor(input.size() / return_vec.size());
+            const int block_remainder = input.size() % return_vec.size();
+            int br_cnt = block_remainder;
             
-            std::vector<std::pair<int, int>> split_locs(rv_size);
-            const size_t sp_size = split_locs.size();
-            for(size_t x = 0 ; x < sp_size ; x++){
-                if(cnt){
+            std::vector<std::pair<int, int>> split_locs(return_vec.size());
+            for(size_t x = 0 ; x < split_locs.size() ; x++){
+                if(br_cnt > 0){
                     split_locs.at(x) = { (block_size + 1) * x  ,  (block_size + 1) * (x + 1)};
-                    cnt--;
+                    br_cnt--;
                 }else{
                     split_locs.at(x) = { block_size * x + block_remainder  ,  block_size * (x + 1) + block_remainder};
                 }
-                
             }
 
-            for(size_t x = 0 ; x < rv_size ; x++){
+            for(size_t x = 0 ; x < return_vec.size() ; x++){
                 helpers::encode_by_bitshift(return_vec.at(x), {input.begin() + split_locs.at(x).first, input.begin() + split_locs.at(x).second});
             }
 

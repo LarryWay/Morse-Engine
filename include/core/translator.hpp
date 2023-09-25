@@ -25,7 +25,7 @@ namespace mrse{
 
         char translate_morse_letter(const std::string& m);
 
-        [[nodiscard]] std::string translate_ascii_phrase(const std::string& input, INPUT_FLAGS flag = INPUT_FLAGS::RAW_INPUT);
+        [[nodiscard]] extern std::string translate_ascii_phrase(const std::string& input, INPUT_FLAGS flag = INPUT_FLAGS::RAW_INPUT);
 
         [[nodiscard]] std::string translate_morse_phrase(const std::string& input);
 

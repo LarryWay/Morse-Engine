@@ -6,15 +6,15 @@
 #include <string>
 #include <vector>
 
+#include "../include/mrse_utility.hpp"
+#include "core/config.cpp"
+
 namespace mrse{
-
-
     
-
-/*  DEFINED IN mrse_utility.hpp
-
-    void binary_print(auto num){
-        std::cout << std::bitset<sizeof(num) * 8>(num) << std::endl;
+    void print_encoded_stream(std::vector<d_Type> vector){
+        for(auto binary : vector){
+            binary_print(binary);
+        }
     }
-*/
+
 }

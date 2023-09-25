@@ -61,7 +61,7 @@ namespace mrse{
 
 
         // Version 3.1 - INPUT_FLAGS optimization
-        [[nodiscard]] std::string translate_ascii_phrase(const std::string& input, INPUT_FLAGS flag = INPUT_FLAGS::RAW_INPUT){
+        [[nodiscard]] std::string translate_ascii_phrase(const std::string& input, INPUT_FLAGS flag){
             std::vector<char> capital_letters(input.size());
             std::span<const char> characters;
             std::vector<std::string> translation_list(input.size());
@@ -69,7 +69,7 @@ namespace mrse{
             if(flag == INPUT_FLAGS::RAW_INPUT){
                 std::transform(input.cbegin(), input.cend(), capital_letters.begin(), ::toupper);
                 characters = {capital_letters.begin(), capital_letters.end()};
-                
+
             }else if(flag == INPUT_FLAGS::CAPITALIZED_INPUT){
                 characters = {input.begin(), input.end()};
             }

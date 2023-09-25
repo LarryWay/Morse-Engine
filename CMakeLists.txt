@@ -10,14 +10,8 @@ set(MRSE_SRCS
     "${SRC}/core/encoder.cpp"
     "${SRC}/core/translator.cpp"
     "${SRC}/mrse_utility.cpp"
-)
-
-set(MRSE_INCLUDES
-    "${INCLUDES}/core/config.cpp"
-    "${INCLUDES}/core/decoder.cpp"
-    "${INCLUDES}/core/encoder.cpp"
-    "${INCLUDES}/core/translator.cpp"
-    "${INCLUDES}/mrse_utility.cpp"
+    "${SRC}/validator.cpp"
+    "${SRC}/engine.cpp"
 )
 
 
